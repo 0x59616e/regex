@@ -142,7 +142,7 @@ impl Nfa {
     // TODO: use HashMap to cache the result
     pub fn partial_match(&self, s: &String) -> Vec<(usize, usize)> {
         let mut state: Vec<(usize, usize)> = vec![];
-        let mut res: Vec<(usize, usize)> = vec![];
+        let mut matched_range: Vec<(usize, usize)> = vec![];
         let start_set = self.get_start_state();
 
         for (i, c) in s.as_bytes().to_vec().into_iter().enumerate() {
@@ -154,7 +154,7 @@ impl Nfa {
                 if new_set != 0 {
                     new_state.push((from, new_set));
                     if self.is_accept_state(new_set) {
-                        res.push((from, i));
+                        matched_range.push((from, i));
                         break;
                     }
                 }
@@ -162,7 +162,7 @@ impl Nfa {
 
             state = new_state;
         }
-        res
+        matched_range
     }
     pub fn step(&self, from: usize, c: u8) -> usize {
         let mut to = 0usize;
