@@ -138,21 +138,6 @@ impl Nfa {
         set & (1 << self.get_accept_node()) != 0
     }
 
-    // magic
-    fn remove_overlap_range(&self, mut range: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
-        range.sort_unstable_by(|a, b| {
-            if a.0 != b.0 {
-                a.0.cmp(&b.0)
-            } else {
-                b.1.cmp(&a.1)
-            }
-        });
-        range.dedup_by(|a, b| {
-            a.0 == b.0
-        });
-
-        range
-    }
     // TODO: change usize to bitset ?
     // TODO: use HashMap to cache the result
     pub fn partial_match(&self, s: &String) -> Vec<(usize, usize)> {
@@ -177,7 +162,7 @@ impl Nfa {
 
             state = new_state;
         }
-        self.remove_overlap_range(res)
+        res
     }
     pub fn step(&self, from: usize, c: u8) -> usize {
         let mut to = 0usize;

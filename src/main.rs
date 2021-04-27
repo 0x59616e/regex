@@ -8,7 +8,6 @@ use std::io::prelude::*;
 
 mod nfa;
 mod re;
-mod bitset;
 
 use nfa::*;
 
@@ -23,7 +22,18 @@ fn main() {
     file.read_to_string(&mut content)
                         .expect("Failed to read the content");
 
-    let range = re_match_engine.partial_match(&content);
+    let mut range = re_match_engine.partial_match(&content);
+    
+    range.sort_unstable_by(|a, b| {
+        if a.0 != b.0 {
+            a.0.cmp(&b.0)
+        } else {
+            b.1.cmp(&a.1)
+        }
+    });
+    range.dedup_by(|a, b| {
+        a.0 == b.0
+    });
 
 
     let mut last = 0;
