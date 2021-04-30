@@ -1,2 +1,2 @@
 # regex
-Supported metacharacter:`*` `|` `?`
+Supported metacharacter:`*` `|` `?` `()`
