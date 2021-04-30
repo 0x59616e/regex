@@ -103,7 +103,14 @@ impl Nfa {
                 nfa.add_relation(old_accept_id, EPSILON, new_accept_id);
                 nfa.add_relation(new_start_id,  EPSILON, new_accept_id);
                 stack.push((new_start_id, new_accept_id));
-            } else if *op == Op::Alter {
+            } else if *op == Op::DupQues {
+                let (new_start_id, new_accept_id) = nfa.add_two_new_node();
+                let (old_start_id, old_accept_id) = stack.pop().unwrap();
+                nfa.add_relation(new_start_id, EPSILON, old_start_id);
+                nfa.add_relation(old_accept_id, EPSILON, new_accept_id);
+                nfa.add_relation(new_start_id, EPSILON, new_accept_id);
+                stack.push((new_start_id, new_accept_id));
+            }else if *op == Op::Alter {
                 let (new_start_id, new_accept_id) = nfa.add_two_new_node();
                 let (n2_start, n2_accept) = stack.pop().unwrap();
                 let (n1_start, n1_accept) = stack.pop().unwrap();

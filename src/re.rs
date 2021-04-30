@@ -23,6 +23,7 @@ pub enum Op {
     Alter,
     Concat,
     Dupstar,
+    DupQues,
     Word(u8),
 }
 
@@ -41,7 +42,8 @@ impl ConcatDetector {
         let mut res: bool = false;
         // magic
         match op {
-            Op::Rightparen | Op::Dupstar => self.state = 1,
+            Op::Rightparen | Op::Dupstar |
+               Op::DupQues   => self.state = 1,
             Op::Alter        => self.state = 2,
             Op::Leftparen => {
                 res = self.state < 2;
@@ -68,13 +70,11 @@ impl Regex {
         &self.postfix
     }
 
-    // TODO: Use LR(1) parser
     pub fn build_postfix_form(self) -> Regex {
-        // Shunting yard
+
         let mut op_stack: Vec<Op> = vec![];
         let mut result:   Vec<Op> = vec![];
 
-        // Shunting yard algorithm
         for op in self.infix {
             if let Op::Word(_) = op {
                 result.push(op);
@@ -122,6 +122,7 @@ impl From<&String> for Regex {
                                 b'(' => Op::Leftparen,
                                 b')' => Op::Rightparen,
                                 b'*' => Op::Dupstar,
+                                b'?' => Op::DupQues,
                                 b'|' => Op::Alter,
                                 _    => Op::Word(x)
                             }).collect();

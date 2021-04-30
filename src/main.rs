@@ -23,7 +23,7 @@ fn main() {
                         .expect("Failed to read the content");
 
     let mut range = re_match_engine.partial_match(&content);
-    
+
     range.sort_unstable_by(|a, b| {
         if a.0 != b.0 {
             a.0.cmp(&b.0)
@@ -31,16 +31,13 @@ fn main() {
             b.1.cmp(&a.1)
         }
     });
+
     range.dedup_by(|a, b| {
-        a.0 == b.0
+        a.0 == b.0 || a.1 < b.1
     });
 
-
     let mut last = 0;
-    for (l, r) in range { 
-        if l < last {
-            continue;
-        }
+    for (l, r) in range {
         print!("{}{}", &content[last..l], &content[l..=r].red());
         last = r + 1;
     }
