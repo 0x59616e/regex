@@ -1,7 +1,6 @@
 # regex
 This is a small regular expresion matcher written in Rust.
 
-I'm not maintaining this project right now. Maybe some day I will come back to this.
 # Build
 You should have Rust toolchain to build this project.
 
